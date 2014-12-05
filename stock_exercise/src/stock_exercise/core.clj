@@ -1,5 +1,8 @@
 (ns stock-exercise.core
+  (:require [clj-http.client :as stock])
   (:gen-class))
+
+(use 'clj-quandl.core)
 
 "Flags"
 (defn daily-winners
