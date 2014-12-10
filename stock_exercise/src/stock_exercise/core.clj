@@ -1,14 +1,20 @@
 (ns stock-exercise.core
   (:require [clj-http.client :as client]
             [clj-time.core :as time]
+            [clj-time.format :as f]
             [clj-quandl.core :as quandl]
+            [cheshire.core :refer :all]
             )
   (:gen-class))
 
 (use 'clj-quandl.core)
 "Quandl token to do API calls"
-(def auth-token "xvzyytDom9qJHjjsZMv")
+(def auth-token "-xvzyytDom9qJHjjsZMv")
 
+(def built-in-formatter (f/formatters :date))
+(def date-today #(clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))]))
+
+(def year-ago-today #(clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))]))
 "Flags"
 (defn daily-winners
   "Prints stocks that had the highest % gain or lowest % loss for each day"
@@ -17,10 +23,12 @@
 given stock symbols
 
 loop -> compare -> print"
-  (let [s1 (quandl "WIKI/APPL" :auth-token auth-token
+  (let [s1 (quandl "WIKI/AAPL" :auth-token auth-token
                    :start-date "2013-12-07" :end-date "2014-12-07"
-                   :transform "rdiff" :rows "4" :sort-order "asc")]
-    (take 5 s1))
+                   :transform "rdiff"
+                   :map-data true :sort-order "asc")
+        s2 (client/get "https://www.quandl.com/api/v1/datasets/WIKI/AAPL.json?trim_start=2013-12-07&trim_end=2014-12-07&column=4&auth_token=-xvzyytDom9qJHjjsZMv")]
+    (generate-string (take 10 s2)))
   
   )
 

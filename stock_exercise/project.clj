@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
 				[clj-time "0.8.0"]
 				[clj-http "1.0.1"]
-				[clj-quandl "0.1.0-SNAPSHOT"]]
+				[clj-quandl "0.1.0-SNAPSHOT"]
+				[cheshire "5.4.0"]]
   :main ^:skip-aot stock-exercise.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
