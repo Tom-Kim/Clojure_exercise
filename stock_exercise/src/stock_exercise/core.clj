@@ -11,7 +11,7 @@
 "Quandl token to do API calls"
 (def auth-token "auth_token=-xvzyytDom9qJHjjsZMv")
 
-(def quandl-api-url "https://www.quandl.com/api/v1/dataset/WIKI/")
+(def quandl-api-url "https://www.quandl.com/api/v1/datasets/WIKI/")
 
 (def date-today #(clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))]))
 
@@ -56,7 +56,7 @@ loop -> compare closing prices -> print top 10"
                  "&trim_start=" year-ago-today "&trim_end=" date-today
                  "&column=4&sort_order=asc")
         apple (client/get url)]
-    (generate-string (take 10 apple)))
+    (generate-string (take 10 (sort > apple))))
   )
 
 (defn bottoms
@@ -66,7 +66,11 @@ loop -> compare closing prices -> print top 10"
 lowest ones.  Print with date
 
 loop -> compare closing prices -> print bottom 10"
-  
+  (let [url (str quandl-api-url "AAPL.json?" auth-token
+                 "&trip_start=" year-ago-today "&trim_end=" date-today
+                 "&column=4&sort_order=dec")
+        apple (client/get url)]
+    (generate-string (take 10 (sort < apple))))
   )
 
 (defn price-graph
