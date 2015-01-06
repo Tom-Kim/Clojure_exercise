@@ -33,18 +33,23 @@ loop -> compare -> print"
   (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
         last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
         test (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)
+        days (take 10 test)
         ]
-    (take 10 (sort-by :Close test)))
+    (reverse (sort-by #(Double/parseDouble (:Close %)) days)))
   
-  )
+)
 
 (defn weekly-winners
   "Prints stocks that had the highest % gain or lowest % loss for each week
 Fri-Fri"
-  [stocks]
+  []
   "get stock data for the past year and then average change in closing price for each week.  Compare deltas and print winners
 
 loop -> daily-winners -> average -> compare delta -> print"
+  (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
+        last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
+        week-test (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true :frequency "weekly")]
+    (take 10 (sort-by :Close week-test)))
   )
 
 (defn tops
@@ -57,36 +62,35 @@ loop -> compare closing prices -> print top 10"
   (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
         last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
         apple (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)]
-    (take 10 (sort-by :Close apple)))
+    (take 10 (reverse (sort-by #(Double/parseDouble (:Close %)) apple))))
   )
 
 (defn bottoms
   "Prints bottom 10 closing prices and dates for each stock"
-  [stocks]
+  []
   "get stock data for the past year and then compare all closing prices for
 lowest ones.  Print with date
 
 loop -> compare closing prices -> print bottom 10"
-  (let [url (str quandl-api-url "AAPL.json?" auth-token
-                 "&trip_start=" year-ago-today "&trim_end=" date-today
-                 "&column=4&sort_order=dec")
-        apple ("")]
-    (generate-string (take 10 apple)))
+  (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
+        last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
+        apple (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)]
+    (take 10 (sort-by #(Double/parseDouble (:Close %)) apple)))
   )
 
 (defn price-graph
-  "Displays a line chart plotting daily closing prices for all stocks"
-  [stocks]
+  "Displays a line chart plotting daily closing prices for all stocks - using incanter"
+  []
   )
 
 (defn weekly-graph
-  "Displays candlestick chart plotting weekly price activity for all stocks"
-  [stocks]
+  "Displays candlestick chart plotting weekly price activity for all stocks - using incanter"
+  []
   )
 
 (defn money-game
   "Simulates optimal investing for $100k based on closing day prices of stocks"
-  [stocks]
+  []
   )
 
 "Given a set of stock symbols and flags as input, program should download the
