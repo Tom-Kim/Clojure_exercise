@@ -6,6 +6,7 @@
             [clj-quandl.core :refer :all]
             [cheshire.core :refer :all]
             
+            
             )
   (:gen-class))
 
@@ -18,7 +19,7 @@
 
 (def year-ago-today #(clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))]))
 
-(def test-url #(str quandl-api-url "AAPL.json?auth_token=" auth-token
+(def test-url-json #(str quandl-api-url "AAPL.json?auth_token=" auth-token
                     "&trim_start=" 'year-ago-today "&trim_end=" 'date-today
                    "&column=4&exclude_headers=true"))
 
@@ -32,10 +33,11 @@ given stock symbols
 loop -> compare -> print"
   (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
         last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
-        test (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)
-        days (take 10 test)
+        closing (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)
+        opening (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=1" :start-date last-year :end-date today :map-data true)
         ]
-    (reverse (sort-by #(Double/parseDouble (:Close %)) days)))
+    (take 2 #((get % :Close) closing))
+    )
   
 )
 
@@ -49,7 +51,7 @@ loop -> daily-winners -> average -> compare delta -> print"
   (let [today (clojure.string/join "-" [(time/year (time/today)) (time/month (time/today)) (time/day (time/today))])
         last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
         week-test (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true :frequency "weekly")]
-    (take 10 (sort-by :Close week-test)))
+    (take 10 week-test))
   )
 
 (defn tops

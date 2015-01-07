@@ -7,7 +7,8 @@
 				[clj-time "0.8.0"]
 				[clj-http "1.0.1"]
 				[clj-quandl "0.1.0-SNAPSHOT"]
-				[cheshire "5.4.0"]]
+				[cheshire "5.4.0"]
+				[incanter "1.5.6"]]
   :main ^:skip-aot stock-exercise.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
