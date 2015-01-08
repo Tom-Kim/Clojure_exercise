@@ -5,8 +5,10 @@
             [clj-time.format :as f]
             [clj-quandl.core :refer :all]
             [cheshire.core :refer :all]
-            
-            
+            [incanter.core :refer :all]
+            [incanter.stats :refer :all]
+            [incanter.charts :refer :all]
+            [incanter.io :refer :all]            
             )
   (:gen-class))
 
@@ -35,10 +37,9 @@ loop -> compare -> print"
         last-year (clojure.string/join "-" [(- (time/year (time/today)) 1) (time/month (time/today)) (time/day (time/today))])
         closing (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=4" :start-date last-year :end-date today :map-data true)
         opening (quandl "WIKI/AAPL" :auth-token "-xvzyytDom9qJHjjsZMv&column=1" :start-date last-year :end-date today :map-data true)
-        ]
-    (take 2 #((get % :Close) closing))
-    )
-  
+        ])
+  (take 2 closing)
+
 )
 
 (defn weekly-winners
